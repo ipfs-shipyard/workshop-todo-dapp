@@ -8,7 +8,11 @@ const ENTER_KEY = 13;
 
 export default class TodoItem extends PureComponent {
     static propTypes = {
-        todo: PropTypes.object.isRequired,
+        todo: PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            title: PropTypes.string.isRequired,
+            completed: PropTypes.bool.isRequired,
+        }),
         onCompleteChange: PropTypes.func.isRequired,
         onTitleChange: PropTypes.func.isRequired,
         onRemove: PropTypes.func.isRequired,
@@ -47,11 +51,9 @@ export default class TodoItem extends PureComponent {
                 }) }>
                 <div
                     className="TodoItem__view">
-                    <input
+                    <button
                         className="TodoItem__toggle"
-                        type="checkbox"
-                        checked={ todo.completed }
-                        onChange={ this.handleToggleChange } />
+                        onClick={ this.handleToggleClick } />
                     <span className="TodoItem__title" onDoubleClick={ this.handleTitleDoubleClick }>
                         { todo.title }
                     </span>
@@ -76,10 +78,6 @@ export default class TodoItem extends PureComponent {
         const { todo } = this.props;
         const newTitle = this.state.editText.trim();
 
-        if (newTitle === this.props.todo.title) {
-            return;
-        }
-
         if (newTitle) {
             this.props.onTitleChange(todo.id, newTitle);
         } else {
@@ -87,8 +85,8 @@ export default class TodoItem extends PureComponent {
         }
     };
 
-    handleToggleChange = (event) =>
-        this.props.onCompleteChange(this.props.todo.id, event.target.checked);
+    handleToggleClick = () =>
+        this.props.onCompleteChange(this.props.todo.id, !this.props.todo.completed);
 
     handleTitleDoubleClick = () =>
         this.setState({ editing: true });

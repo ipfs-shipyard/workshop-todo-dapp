@@ -1,4 +1,42 @@
-.TodoHeader__input {
+.TodoHeader {
+    position: relative;
+}
+
+/* ==========================================================================
+   Toggle all
+   ========================================================================== */
+
+.TodoHeader__toggle-all {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 46px;
+    height: 46px;
+    margin: 0;
+    padding: 0;
+    transform: translateY(-50%) rotate(90deg);
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    appearance: none;
+}
+
+.TodoHeader__toggle-all::before {
+    content: "❯";
+    color: #e6e6e6;
+    font-size: 22px;
+}
+
+.TodoHeader__toggle-all--active::before {
+    color: #737373;
+}
+
+/* ==========================================================================
+   New todo input
+   ========================================================================== */
+
+.TodoHeader__new-input {
     width: 100%;
     margin: 0;
     padding: 16px 16px 16px 60px;
@@ -12,7 +50,7 @@
     font-weight: inherit;
 }
 
-.TodoHeader__input::placeholder {
+.TodoHeader__new-input::placeholder {
     color: #e6e6e6;
     font-style: italic;
 }

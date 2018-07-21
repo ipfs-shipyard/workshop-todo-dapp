@@ -27,10 +27,20 @@
 
 .App__main {
     position: relative;
-    background: #fff;
     box-shadow:
         0 2px 4px 0 rgba(0, 0, 0, 0.2),
         0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+.App__main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    background: #fff;
 }
 
 .App__main::after {
@@ -40,6 +50,7 @@
     bottom: 0;
     left: 0;
     height: 20px;
+    z-index: 1;
     box-shadow:
         0 1px 1px rgba(0, 0, 0, 0.2),
         0 8px 0 -3px #f6f6f6,
@@ -49,14 +60,16 @@
     pointer-events: none;
 }
 
-.App__todo-list {
+.App__main > * {
     position: relative;
-    z-index: 1;
+    z-index: 3;
+}
+
+.App__todo-list {
     margin: 0;
     padding: 0;
     list-style: none;
     border-top: 1px solid #e6e6e6;
-    background: #fff;
 }
 
 /* ==========================================================================
@@ -69,10 +82,6 @@
     font-size: 10px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     text-align: center;
-}
-
-.App__footer p {
-    line-height: 1;
 }
 
 .App__footer a {

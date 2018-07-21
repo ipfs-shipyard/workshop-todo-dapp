@@ -9,7 +9,12 @@
     text-align: center;
 }
 
+/* ==========================================================================
+   Count
+   ========================================================================== */
+
 .TodoFooter__count {
+    min-width: 75px;
     margin: 5px 15px;
     text-align: left;
 }
@@ -17,6 +22,10 @@
 .TodoFooter__count strong {
     font-weight: 300;
 }
+
+/* ==========================================================================
+   Filters
+   ========================================================================== */
 
 .TodoFooter__filters {
     margin: 5px 15px;
@@ -32,6 +41,7 @@
     border-radius: 3px;
     color: inherit;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .TodoFooter__filter:last-child {
@@ -46,6 +56,10 @@
     border-color: rgba(175, 47, 47, 0.2);
 }
 
+/* ==========================================================================
+   Clear completed
+   ========================================================================== */
+
 .TodoFooter__clear-completed {
     margin: 5px 15px;
     padding: 0;
@@ -55,11 +69,14 @@
     color: inherit;
     font: inherit;
     text-decoration: none;
-    line-height: 20px;
     cursor: pointer;
     appearance: none;
 }
 
 .TodoFooter__clear-completed:hover {
     text-decoration: underline;
+}
+
+.TodoFooter__clear-completed--hidden {
+    visibility: hidden;
 }

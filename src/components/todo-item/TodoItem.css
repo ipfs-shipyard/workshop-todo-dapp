@@ -32,47 +32,54 @@
     position: absolute;
     top: 50%;
     left: 0;
-    width: 48px;
-    height: 40px;
+    width: 46px;
+    height: 46px;
     margin: 0;
-    margin-top: -20px;
+    margin-top: -23px;
+    padding: 0;
     border: none;
     outline: none;
-    opacity: 0;
-    text-align: center;
-    appearance: none;
-}
-
-.TodoItem__title {
-    padding: 10px 60px;
+    background-color: transparent;
     background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23ededed%22%20stroke-width%3D%223%22/%3E%3C/svg%3E");
     background-position: center left;
     background-repeat: no-repeat;
+    text-align: center;
+    cursor: pointer;
+    appearance: none;
+}
+
+.TodoItem--completed .TodoItem__toggle {
+    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E");
+}
+
+.TodoItem__title {
+    width: 100%;
+    padding: 10px 60px;
     font-size: 24px;
-    white-space: pre-line;
 }
 
 .TodoItem--completed .TodoItem__title {
-    background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E");
     color: #d9d9d9;
     text-decoration: line-through;
 }
 
 .TodoItem__remove {
     position: absolute;
-    top: 0;
-    right: 10px;
+    top: 50%;
+    right: 0;
     bottom: 0;
-    width: 40px;
-    height: 40px;
-    margin: auto 0;
-    margin-bottom: 11px;
+    width: 46px;
+    height: 46px;
+    margin: 0;
+    margin-top: -23px;
+    padding: 0;
     display: none;
     border: none;
     outline: none;
     background: none;
     color: #cc9a9a;
     font-size: 30px;
+    cursor: pointer;
     appearance: none;
 }
 

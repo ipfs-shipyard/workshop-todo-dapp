@@ -2,16 +2,46 @@ import React, { Component } from 'react';
 import TodoHeader from './components/todo-header';
 import TodoItem from './components/todo-item';
 import TodoFooter from './components/todo-footer';
+import todosStore from './todosStore';
+import memoize from 'memoize-one';
 import './App.css';
 
-const todoList = [
-    { id: '1', title: 'Buy candies', completed: false },
-    { id: '2', title: 'Finish DApp', completed: true },
-    { id: '3', title: 'Finish presentation', completed: false },
-];
+const filterTodos = memoize((todos, filter) => {
+    switch (filter) {
+    case 'active':
+        return todos.filter((todo) => !todo.completed);
+    case 'completed':
+        return todos.filter((todo) => todo.completed);
+    default:
+        return todos;
+    }
+});
+
+const calculateTodosCounts = memoize((todos) => {
+    const completed = todos.reduce((count, todo) => count + (todo.completed ? 1 : 0), 0);
+
+    return {
+        total: todos.length,
+        remaining: todos.length - completed,
+        completed,
+    };
+});
 
 class App extends Component {
+    state = {
+        todos: todosStore.list(),
+        filter: 'all',
+    };
+
+    componentDidMount() {
+        todosStore.subscribe((todos) => this.setState({ todos }));
+    }
+
     render() {
+        const { todos, filter } = this.state;
+        const todosCounts = calculateTodosCounts(todos);
+        const filteredTodos = filterTodos(todos, filter);
+
         return (
             <div className="App">
                 <header className="App__header">
@@ -20,25 +50,30 @@ class App extends Component {
 
                 <main className="App__main">
                     <TodoHeader
-                        onNewTodo={ this.handleNewTodo } />
+                        onNewTodo={ this.handleNewTodo }
+                        counts={ todosCounts }
+                        onAllCompletedToggle={ this.handleAllCompletedToggle } />
 
-                    <ul className="App__todo-list">
-                        { todoList.map((todo) => (
-                            <TodoItem
-                                key={ todo.id }
-                                todo={ todo }
-                                onTitleChange={ this.handleTitleChange }
-                                onCompleteChange={ this.handleCompleteChange }
-                                onRemove={ this.handleRemove } />
-                        )) }
-                    </ul>
+                    { filteredTodos.length ? (
+                        <ul className="App__todo-list">
+                            { filteredTodos.map((todo) => (
+                                <TodoItem
+                                    key={ todo.id }
+                                    todo={ todo }
+                                    onTitleChange={ this.handleTitleChange }
+                                    onCompleteChange={ this.handleCompleteChange }
+                                    onRemove={ this.handleRemove } />
+                            )) }
+                        </ul>
+                    ) : null }
 
-                    <TodoFooter
-                        remainingCount={ 2 }
-                        completedCount={ 2 }
-                        filtering="all"
-                        onClearCompleted={ this.handleClearCompleted }
-                        onFilterChange={ this.handleFilterChange } />
+                    { todosCounts.total > 0 ? (
+                        <TodoFooter
+                            counts={ todosCounts }
+                            filter={ filter }
+                            onClearCompleted={ this.handleClearCompleted }
+                            onFilterChange={ this.handleFilterChange } />
+                    ) : null }
                 </main>
 
                 <footer className="App__footer">
@@ -50,17 +85,19 @@ class App extends Component {
         );
     }
 
-    handleNewTodo = (title) => console.log('new todo', title);
+    handleNewTodo = (title) => todosStore.add(title);
 
-    handleTitleChange = (id, title) => console.log('title change', id, title);
+    handleAllCompletedToggle = (completed) => todosStore.updateAllCompleted(completed);
 
-    handleCompleteChange = (id, completed) => console.log('complete change', id, completed);
+    handleTitleChange = (id, title) => todosStore.updateTitle(id, title);
 
-    handleRemove = (id) => console.log('remove', id);
+    handleCompleteChange = (id, completed) => todosStore.updateCompleted(id, completed);
 
-    handleClearCompleted = () => console.log('clear completed');
+    handleRemove = (id) => todosStore.remove(id);
 
-    handleFilterChange = (filter) => console.log('filter change', filter);
+    handleClearCompleted = () => todosStore.clearCompleted();
+
+    handleFilterChange = (filter) => this.setState({ filter });
 }
 
 export default App;

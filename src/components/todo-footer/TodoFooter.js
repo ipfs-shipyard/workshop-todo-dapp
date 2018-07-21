@@ -6,53 +6,56 @@ import './TodoFooter.css';
 
 export default class TodoFooter extends PureComponent {
     static propTypes = {
-        remainingCount: PropTypes.number.isRequired,
-        completedCount: PropTypes.number.isRequired,
-        filtering: PropTypes.oneOf(['all', 'active', 'completed']),
+        counts: PropTypes.shape({
+            total: PropTypes.number.isRequired,
+            remaining: PropTypes.number.isRequired,
+            completed: PropTypes.number.isRequired,
+        }),
+        filter: PropTypes.oneOf(['all', 'active', 'completed']),
         onClearCompleted: PropTypes.func.isRequired,
         onFilterChange: PropTypes.func.isRequired,
     };
 
     render() {
-        const { remainingCount, completedCount, filtering } = this.props;
-        const todoWord = pluralize('todo', remainingCount);
+        const { counts, filter } = this.props;
+        const todoWord = pluralize('todo', counts.remaining);
 
         return (
             <div className="TodoFooter">
                 <span className="TodoFooter__count">
-                    <strong>{ remainingCount }</strong> { todoWord } left
+                    <strong>{ counts.remaining }</strong> { todoWord } left
                 </span>
                 <ul className="TodoFooter__filters">
                     <li
                         className={ classNames('TodoFooter__filter', {
-                            'TodoFooter__filter--selected': filtering === 'all',
+                            'TodoFooter__filter--selected': filter === 'all',
                         }) }
                         onClick={ this.handleFilterAllClick }>
                         All
                     </li>
                     <li
                         className={ classNames('TodoFooter__filter', {
-                            'TodoFooter__filter--selected': filtering === 'active',
+                            'TodoFooter__filter--selected': filter === 'active',
                         }) }
                         onClick={ this.handleFilterActiveClick }>
                         Active
                     </li>
                     <li
                         className={ classNames('TodoFooter__filter', {
-                            'TodoFooter__filter--selected': filtering === 'completed',
+                            'TodoFooter__filter--selected': filter === 'completed',
                         }) }
                         onClick={ this.handleFilterCompletedClick }>
                         Completed
                     </li>
                 </ul>
 
-                { completedCount > 0 ? (
-                    <button
-                        className="TodoFooter__clear-completed"
-                        onClick={ this.handleClearCompletedClick }>
-                        Clear completed
-                    </button>
-                ) : null }
+                <button
+                    className={ classNames('TodoFooter__clear-completed', {
+                        'TodoFooter__clear-completed--hidden': counts.completed === 0,
+                    }) }
+                    onClick={ this.handleClearCompletedClick }>
+                    Clear completed
+                </button>
             </div>
         );
     }
