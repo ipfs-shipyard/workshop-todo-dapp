@@ -1,0 +1,18 @@
+.TodoHeader__input {
+    width: 100%;
+    margin: 0;
+    padding: 16px 16px 16px 60px;
+    border: none;
+    outline: none;
+    background: rgba(0, 0, 0, 0.003);
+    box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
+    color: inherit;
+    font-family: inherit;
+    font-size: 24px;
+    font-weight: inherit;
+}
+
+.TodoHeader__input::placeholder {
+    color: #e6e6e6;
+    font-style: italic;
+}

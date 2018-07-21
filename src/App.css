@@ -1,28 +1,86 @@
 .App {
-  text-align: center;
+    position: relative;
+    width: calc(100% - 20px);
+    max-width: 550px;
+    margin: 0 auto;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+/* ==========================================================================
+   Header elements
+   ========================================================================== */
+
+.App__header {
+    margin: 10px 0 5px 0;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.App__header h1 {
+    margin: 0;
+    color: rgba(175, 47, 47, 0.15);
+    font-size: 100px;
+    font-weight: 100;
+    text-align: center;
 }
 
-.App-title {
-  font-size: 1.5em;
+/* ==========================================================================
+   Main elements
+   ========================================================================== */
+
+.App__main {
+    position: relative;
+    background: #fff;
+    box-shadow:
+        0 2px 4px 0 rgba(0, 0, 0, 0.2),
+        0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
 
-.App-intro {
-  font-size: large;
+.App__main::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 20px;
+    box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.2),
+        0 8px 0 -3px #f6f6f6,
+        0 9px 1px -3px rgba(0, 0, 0, 0.2),
+        0 16px 0 -6px #f6f6f6,
+        0 17px 2px -6px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.App__todo-list {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid #e6e6e6;
+    background: #fff;
+}
+
+/* ==========================================================================
+   Footer elements
+   ========================================================================== */
+
+.App__footer {
+    margin: 65px auto 0;
+    color: #bfbfbf;
+    font-size: 10px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+.App__footer p {
+    line-height: 1;
+}
+
+.App__footer a {
+    color: inherit;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.App__footer a:hover {
+    text-decoration: underline;
 }
