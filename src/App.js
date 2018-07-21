@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TodoHeader from './components/todo-header';
 import TodoItem from './components/todo-item';
 import TodoFooter from './components/todo-footer';
-import todosStore from './todosStore';
+import todosStore from './todos-store';
 import memoize from 'memoize-one';
 import './App.css';
 

@@ -1,10 +1,15 @@
 import uuidv4 from 'uuid/v4';
+import { readTodos, saveTodos, saveTodosThrottled } from './storage';
 
-let todos = [];
+let todos = readTodos() || [];
 const subscribers = new Set();
 
-const publishStateChange = () =>
+window.addEventListener('unload', () => saveTodos(todos));
+
+const publishStateChange = () => {
+    saveTodosThrottled(todos);
     subscribers.forEach((listener) => listener(todos));
+};
 
 export default {
     list() {
