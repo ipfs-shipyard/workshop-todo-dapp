@@ -13,8 +13,5 @@ body {
     color: #4d4d4d;
     font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 300;
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    font-smoothing: antialiased;
     overflow-wrap: break-word;  /* Break long words by default */
 }
