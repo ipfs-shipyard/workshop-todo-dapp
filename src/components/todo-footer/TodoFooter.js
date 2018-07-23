@@ -6,24 +6,21 @@ import './TodoFooter.css';
 
 export default class TodoFooter extends PureComponent {
     static propTypes = {
-        counts: PropTypes.shape({
-            total: PropTypes.number.isRequired,
-            remaining: PropTypes.number.isRequired,
-            completed: PropTypes.number.isRequired,
-        }),
+        remainingCount: PropTypes.number.isRequired,
+        showClearCompleted: PropTypes.bool.isRequired,
         filter: PropTypes.oneOf(['all', 'active', 'completed']),
         onClearCompleted: PropTypes.func.isRequired,
         onFilterChange: PropTypes.func.isRequired,
     };
 
     render() {
-        const { counts, filter } = this.props;
-        const todoWord = pluralize('todo', counts.remaining);
+        const { remainingCount, showClearCompleted, filter } = this.props;
+        const todoWord = pluralize('todo', remainingCount);
 
         return (
             <div className="TodoFooter">
                 <span className="TodoFooter__count">
-                    <strong>{ counts.remaining }</strong> { todoWord } left
+                    <strong>{ remainingCount }</strong> { todoWord } left
                 </span>
                 <ul className="TodoFooter__filters">
                     <li
@@ -51,7 +48,7 @@ export default class TodoFooter extends PureComponent {
 
                 <button
                     className={ classNames('TodoFooter__clear-completed', {
-                        'TodoFooter__clear-completed--hidden': counts.completed === 0,
+                        'TodoFooter__clear-completed--hidden': !showClearCompleted,
                     }) }
                     onClick={ this.handleClearCompletedClick }>
                     Clear completed

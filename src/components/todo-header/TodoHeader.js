@@ -7,11 +7,8 @@ const ENTER_KEY = 13;
 
 export default class TodoHeader extends PureComponent {
     static propTypes = {
-        counts: PropTypes.shape({
-            total: PropTypes.number.isRequired,
-            remaining: PropTypes.number.isRequired,
-            completed: PropTypes.number.isRequired,
-        }),
+        isEmpty: PropTypes.bool.isRequired,
+        allCompleted: PropTypes.bool.isRequired,
         onNewTodo: PropTypes.func.isRequired,
         onAllCompletedToggle: PropTypes.func.isRequired,
     };
@@ -19,14 +16,14 @@ export default class TodoHeader extends PureComponent {
     state = { newTodo: '' };
 
     render() {
-        const { counts } = this.props;
+        const { isEmpty, allCompleted } = this.props;
 
         return (
             <div className="TodoHeader">
-                { counts.total > 0 ? (
+                { !isEmpty ? (
                     <button
                         className={ classNames('TodoHeader__toggle-all', {
-                            'TodoHeader__toggle-all--active': counts.remaining === 0,
+                            'TodoHeader__toggle-all--active': allCompleted,
                         }) }
                         onClick={ this.handleToggleAllClick } />
                 ) : null }
@@ -59,5 +56,5 @@ export default class TodoHeader extends PureComponent {
         this.setState({ newTodo: event.target.value });
 
     handleToggleAllClick = () =>
-        this.props.onAllCompletedToggle(this.props.counts.remaining > 0);
+        this.props.onAllCompletedToggle(!this.props.allCompleted);
 }

@@ -51,7 +51,8 @@ class App extends Component {
                 <main className="App__main">
                     <TodoHeader
                         onNewTodo={ this.handleNewTodo }
-                        counts={ todosCounts }
+                        isEmpty={ todosCounts.total === 0 }
+                        allCompleted={ todosCounts.remaining === 0 }
                         onAllCompletedToggle={ this.handleAllCompletedToggle } />
 
                     { filteredTodos.length ? (
@@ -69,7 +70,8 @@ class App extends Component {
 
                     { todosCounts.total > 0 ? (
                         <TodoFooter
-                            counts={ todosCounts }
+                            remainingCount={ todosCounts.remaining }
+                            showClearCompleted={ todosCounts.completed > 0 }
                             filter={ filter }
                             onClearCompleted={ this.handleClearCompleted }
                             onFilterChange={ this.handleFilterChange } />
