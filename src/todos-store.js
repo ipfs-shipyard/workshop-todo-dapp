@@ -1,37 +1,41 @@
 import uuidv4 from 'uuid/v4';
-import throttle from 'lodash/throttle';
+import createApp from 'peer-star-app';
+import debounce from 'lodash/debounce';
 
 let todos;
 const subscribers = new Set();
+const app = createApp('todo-dapp');
+let collaboration;
 
-window.addEventListener('unload', () => saveTodos(todos));
+app.on('error', (err) => console.error('error in app:', err));
 
-const readTodos = () => JSON.parse(localStorage.getItem('dapp-todos') || '[]');
-const saveTodos = () => todos && localStorage.setItem('dapp-todos', JSON.stringify(todos));
-const saveTodosThrottled = throttle(saveTodos, 1000, { leading: false });
-
-const publishStateChange = (todos) => {
-    saveTodosThrottled(todos);
-    subscribers.forEach((listener) => listener(todos));
-};
+const publishStateChange = (todos) => subscribers.forEach((listener) => listener(todos));
+const publishStateChangeDebounced = debounce((todos) => subscribers.forEach((listener) => listener(todos)), 200);
 
 export default {
-    load() {
-        return new Promise((resolve) => {
-            todos = readTodos();
-            setTimeout(() => resolve(todos), 400);
+    async load() {
+        await app.start();
+
+        collaboration = await app.collaborate('todos', 'rga');
+        todos = collaboration.shared.value();
+
+        collaboration.on('state changed', (fromSelf) => {
+            todos = collaboration.shared.value();
+
+            if (fromSelf) {
+                publishStateChange(todos);
+            } else {
+                publishStateChangeDebounced(todos);
+            }
         });
+
+        return todos;
     },
 
     add(title) {
         const newTodo = { id: uuidv4(), title, completed: false };
 
-        todos = [
-            ...todos,
-            newTodo,
-        ];
-
-        publishStateChange(todos);
+        collaboration.shared.push(newTodo);
     },
 
     remove(id) {
@@ -41,12 +45,7 @@ export default {
             return;
         }
 
-        todos = [
-            ...todos.slice(0, index),
-            ...todos.slice(index + 1),
-        ];
-
-        publishStateChange(todos);
+        collaboration.shared.removeAt(index);
     },
 
     updateTitle(id, title) {
@@ -59,13 +58,7 @@ export default {
 
         const updatedTodo = { ...todo, title };
 
-        todos = [
-            ...todos.slice(0, index),
-            updatedTodo,
-            ...todos.slice(index + 1),
-        ];
-
-        publishStateChange(todos);
+        collaboration.shared.updateAt(index, updatedTodo);
     },
 
     updateCompleted(id, completed) {
@@ -78,13 +71,7 @@ export default {
 
         const updatedTodo = { ...todo, completed };
 
-        todos = [
-            ...todos.slice(0, index),
-            updatedTodo,
-            ...todos.slice(index + 1),
-        ];
-
-        publishStateChange(todos);
+        collaboration.shared.updateAt(index, updatedTodo);
     },
 
     updateAllCompleted(completed) {
