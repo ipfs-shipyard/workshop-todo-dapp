@@ -1,8 +1,10 @@
 .App {
-    position: relative;
     width: calc(100% - 20px);
     max-width: 550px;
     margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 /* ==========================================================================
@@ -11,6 +13,7 @@
 
 .App__header {
     margin: 10px 0 5px 0;
+    flex: 0 0 100%;
 }
 
 .App__header h1 {
@@ -22,21 +25,37 @@
 }
 
 /* ==========================================================================
+   Loader & error elements
+   ========================================================================== */
+
+.App__loader,
+.App__error {
+    min-height: 60px;
+    padding-top: 20px;
+    display: flex;
+    flex: 0 0 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.App__loader {
+    color: #afafaf;
+}
+
+.App__error {
+    color: #cc9a9a;
+}
+
+/* ==========================================================================
    Main elements
    ========================================================================== */
 
 .App__main {
     position: relative;
+    flex: 0 0 100%;
     box-shadow:
         0 2px 4px 0 rgba(0, 0, 0, 0.2),
         0 25px 50px 0 rgba(0, 0, 0, 0.1);
-}
-
-.App__main--loading,
-.App__main--errored {
-    padding: 40px;
-    color: #afafaf;
-    text-align: center;
 }
 
 .App__main::before {
@@ -85,6 +104,7 @@
 
 .App__footer {
     margin: 65px auto 0;
+    flex: 0 0 100%;
     color: #bfbfbf;
     font-size: 10px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);

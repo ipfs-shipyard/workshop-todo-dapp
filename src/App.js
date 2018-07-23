@@ -1,33 +1,11 @@
-import React, { Component, Fragment } from 'react';
-import classNames from 'classnames';
+import React, { Component } from 'react';
 import TodoHeader from './components/todo-header';
 import TodoItem from './components/todo-item';
 import TodoFooter from './components/todo-footer';
 import CircularLoader from './components/circular-loader';
 import todosStore from './todos-store';
-import memoize from 'memoize-one';
+import { filterTodos, calculateTodosCounts } from './todos-selectors';
 import './App.css';
-
-const filterTodos = memoize((todos, filter) => {
-    switch (filter) {
-    case 'active':
-        return todos.filter((todo) => !todo.completed);
-    case 'completed':
-        return todos.filter((todo) => todo.completed);
-    default:
-        return todos;
-    }
-});
-
-const calculateTodosCounts = memoize((todos) => {
-    const completed = todos.reduce((count, todo) => count + (todo.completed ? 1 : 0), 0);
-
-    return {
-        total: todos.length,
-        remaining: todos.length - completed,
-        completed,
-    };
-});
 
 class App extends Component {
     state = {
@@ -43,7 +21,6 @@ class App extends Component {
 
             this.setState({ loading: false, todos });
         } catch (error) {
-            console.error(error);
             this.setState({ loading: false, error });
         }
 
@@ -59,14 +36,9 @@ class App extends Component {
                     <h1>todos</h1>
                 </header>
 
-                <main className={ classNames('App__main', {
-                    'App__main--loading': loading,
-                    'App__main--errored': error,
-                }) }>
-                    { loading ? <CircularLoader /> : null }
-                    { error ? <div>An error occurred while loading the todos</div> : null }
-                    { todos ? this.renderTodos() : null }
-                </main>
+                { loading ? this.renderLoading() : null }
+                { error ? this.renderError() : null }
+                { todos ? this.renderTodos() : null }
 
                 <footer className="App__footer">
                     <p>Double-click to edit a todo</p>
@@ -77,13 +49,29 @@ class App extends Component {
         );
     }
 
+    renderLoading() {
+        return (
+            <div className="App__loader">
+                <CircularLoader />
+            </div>
+        );
+    }
+
+    renderError() {
+        return (
+            <div className="App__error">
+                An error occurred while loading the todos
+            </div>
+        );
+    }
+
     renderTodos() {
         const { todos, filter } = this.state;
         const todosCounts = calculateTodosCounts(todos);
         const filteredTodos = filterTodos(todos, filter);
 
         return (
-            <Fragment>
+            <main className="App__main">
                 <TodoHeader
                     onNewTodo={ this.handleNewTodo }
                     isEmpty={ todosCounts.total === 0 }
@@ -111,7 +99,7 @@ class App extends Component {
                         onClearCompleted={ this.handleClearCompleted }
                         onFilterChange={ this.handleFilterChange } />
                 ) : null }
-            </Fragment>
+            </main>
         );
     }
 

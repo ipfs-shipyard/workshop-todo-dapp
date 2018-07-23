@@ -6,8 +6,8 @@ const subscribers = new Set();
 
 window.addEventListener('unload', () => saveTodos(todos));
 
-const readTodos = () => JSON.parse(localStorage.getItem('dapp-todos') || []);
-const saveTodos = () => localStorage.setItem('dapp-todos', JSON.stringify(todos));
+const readTodos = () => JSON.parse(localStorage.getItem('dapp-todos') || '[]');
+const saveTodos = () => todos && localStorage.setItem('dapp-todos', JSON.stringify(todos));
 const saveTodosThrottled = throttle(saveTodos, 1000, { leading: false });
 
 const publishStateChange = () => {
@@ -19,7 +19,6 @@ export default {
     load() {
         return new Promise((resolve) => {
             todos = readTodos();
-
             setTimeout(() => resolve(todos), 400);
         });
     },
