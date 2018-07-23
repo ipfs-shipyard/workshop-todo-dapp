@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import classNames from 'classnames';
 import TodoHeader from './components/todo-header';
 import TodoItem from './components/todo-item';
 import TodoFooter from './components/todo-footer';
+import CircularLoader from './components/circular-loader';
 import todosStore from './todos-store';
 import memoize from 'memoize-one';
 import './App.css';
@@ -29,18 +31,27 @@ const calculateTodosCounts = memoize((todos) => {
 
 class App extends Component {
     state = {
-        todos: todosStore.list(),
+        loading: true,
+        error: null,
+        todos: null,
         filter: 'all',
     };
 
-    componentDidMount() {
+    async componentDidMount() {
+        try {
+            const todos = await todosStore.load();
+
+            this.setState({ loading: false, todos });
+        } catch (error) {
+            console.error(error);
+            this.setState({ loading: false, error });
+        }
+
         todosStore.subscribe((todos) => this.setState({ todos }));
     }
 
     render() {
-        const { todos, filter } = this.state;
-        const todosCounts = calculateTodosCounts(todos);
-        const filteredTodos = filterTodos(todos, filter);
+        const { loading, error, todos } = this.state;
 
         return (
             <div className="App">
@@ -48,34 +59,13 @@ class App extends Component {
                     <h1>todos</h1>
                 </header>
 
-                <main className="App__main">
-                    <TodoHeader
-                        onNewTodo={ this.handleNewTodo }
-                        isEmpty={ todosCounts.total === 0 }
-                        allCompleted={ todosCounts.remaining === 0 }
-                        onAllCompletedToggle={ this.handleAllCompletedToggle } />
-
-                    { filteredTodos.length ? (
-                        <ul className="App__todo-list">
-                            { filteredTodos.map((todo) => (
-                                <TodoItem
-                                    key={ todo.id }
-                                    todo={ todo }
-                                    onTitleChange={ this.handleTitleChange }
-                                    onCompleteChange={ this.handleCompleteChange }
-                                    onRemove={ this.handleRemove } />
-                            )) }
-                        </ul>
-                    ) : null }
-
-                    { todosCounts.total > 0 ? (
-                        <TodoFooter
-                            remainingCount={ todosCounts.remaining }
-                            showClearCompleted={ todosCounts.completed > 0 }
-                            filter={ filter }
-                            onClearCompleted={ this.handleClearCompleted }
-                            onFilterChange={ this.handleFilterChange } />
-                    ) : null }
+                <main className={ classNames('App__main', {
+                    'App__main--loading': loading,
+                    'App__main--errored': error,
+                }) }>
+                    { loading ? <CircularLoader /> : null }
+                    { error ? <div>An error occurred while loading the todos</div> : null }
+                    { todos ? this.renderTodos() : null }
                 </main>
 
                 <footer className="App__footer">
@@ -84,6 +74,44 @@ class App extends Component {
                     <p>Slightly modified version of <a href="http://todomvc.com">TodoMVC</a></p>
                 </footer>
             </div>
+        );
+    }
+
+    renderTodos() {
+        const { todos, filter } = this.state;
+        const todosCounts = calculateTodosCounts(todos);
+        const filteredTodos = filterTodos(todos, filter);
+
+        return (
+            <Fragment>
+                <TodoHeader
+                    onNewTodo={ this.handleNewTodo }
+                    isEmpty={ todosCounts.total === 0 }
+                    allCompleted={ todosCounts.remaining === 0 }
+                    onAllCompletedToggle={ this.handleAllCompletedToggle } />
+
+                { filteredTodos.length ? (
+                    <ul className="App__todo-list">
+                        { filteredTodos.map((todo) => (
+                            <TodoItem
+                                key={ todo.id }
+                                todo={ todo }
+                                onTitleChange={ this.handleTitleChange }
+                                onCompleteChange={ this.handleCompleteChange }
+                                onRemove={ this.handleRemove } />
+                        )) }
+                    </ul>
+                ) : null }
+
+                { todosCounts.total > 0 ? (
+                    <TodoFooter
+                        remainingCount={ todosCounts.remaining }
+                        showClearCompleted={ todosCounts.completed > 0 }
+                        filter={ filter }
+                        onClearCompleted={ this.handleClearCompleted }
+                        onFilterChange={ this.handleFilterChange } />
+                ) : null }
+            </Fragment>
         );
     }
 

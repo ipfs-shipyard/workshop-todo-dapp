@@ -32,6 +32,13 @@
         0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
 
+.App__main--loading,
+.App__main--errored {
+    padding: 40px;
+    color: #afafaf;
+    text-align: center;
+}
+
 .App__main::before {
     content: "";
     position: absolute;

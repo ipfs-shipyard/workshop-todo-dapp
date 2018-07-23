@@ -1,10 +1,14 @@
 import uuidv4 from 'uuid/v4';
-import { readTodos, saveTodos, saveTodosThrottled } from './storage';
+import throttle from 'lodash/throttle';
 
-let todos = readTodos() || [];
+let todos;
 const subscribers = new Set();
 
 window.addEventListener('unload', () => saveTodos(todos));
+
+const readTodos = () => JSON.parse(localStorage.getItem('dapp-todos') || []);
+const saveTodos = () => localStorage.setItem('dapp-todos', JSON.stringify(todos));
+const saveTodosThrottled = throttle(saveTodos, 1000, { leading: false });
 
 const publishStateChange = () => {
     saveTodosThrottled(todos);
@@ -12,8 +16,12 @@ const publishStateChange = () => {
 };
 
 export default {
-    list() {
-        return todos;
+    load() {
+        return new Promise((resolve) => {
+            todos = readTodos();
+
+            setTimeout(() => resolve(todos), 400);
+        });
     },
 
     add(title) {
