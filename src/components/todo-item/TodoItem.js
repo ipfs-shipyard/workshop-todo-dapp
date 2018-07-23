@@ -78,6 +78,8 @@ export default class TodoItem extends PureComponent {
         const { todo } = this.props;
         const newTitle = this.state.editText.trim();
 
+        this.setState({ editing: false });
+
         if (newTitle) {
             this.props.onTitleChange(todo.id, newTitle);
         } else {
@@ -91,10 +93,7 @@ export default class TodoItem extends PureComponent {
     handleTitleDoubleClick = () =>
         this.setState({ editing: true });
 
-    handleEditInputBlur = () => {
-        this.setState({ editing: false });
-        this.reportTitleChange();
-    };
+    handleEditInputBlur = () => this.reportTitleChange();
 
     handleEditInputKeyDown = (event) => {
         if (event.which === ESCAPE_KEY) {

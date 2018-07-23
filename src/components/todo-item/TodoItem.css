@@ -100,7 +100,7 @@
    ========================================================================== */
 
 .TodoItem__edit-input {
-    width: 506px;
+    width: calc(100% - 43px);
     height: 58px;
     margin: 0 0 0 43px;
     padding: 0 16px;
