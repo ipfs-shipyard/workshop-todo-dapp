@@ -21,6 +21,7 @@ class App extends Component {
 
             this.setState({ loading: false, todos });
         } catch (error) {
+            console.error(error);
             this.setState({ loading: false, error });
         }
 
