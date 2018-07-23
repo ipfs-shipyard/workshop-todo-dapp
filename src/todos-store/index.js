@@ -77,6 +77,7 @@ export default {
     clearCompleted() {
         todos
         .filter((todo) => todo.completed)
+        .reverse()
         .forEach((todo) => this.remove(todo.id));
     },
 
