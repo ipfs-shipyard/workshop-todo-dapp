@@ -28,6 +28,10 @@ export default {
     remove(id) {
         const index = todos.findIndex((todo) => todo.id === id);
 
+        if (index === -1) {
+            return;
+        }
+
         todos = [
             ...todos.slice(0, index),
             ...todos.slice(index + 1),
@@ -38,15 +42,22 @@ export default {
 
     updateTitle(id, title) {
         const index = todos.findIndex((todo) => todo.id === id);
+
+        if (index === -1) {
+            return;
+        }
+
         const todo = todos[index];
 
         if (todo.title === title) {
             return;
         }
 
+        const newTodo = { ...todo, title };
+
         todos = [
             ...todos.slice(0, index),
-            { ...todo, title },
+            newTodo,
             ...todos.slice(index + 1),
         ];
 
@@ -55,15 +66,22 @@ export default {
 
     updateCompleted(id, completed) {
         const index = todos.findIndex((todo) => todo.id === id);
+
+        if (index === -1) {
+            return;
+        }
+
         const todo = todos[index];
 
         if (todo.completed === completed) {
             return;
         }
 
+        const newTodo = { ...todo, completed };
+
         todos = [
             ...todos.slice(0, index),
-            { ...todo, completed },
+            newTodo,
             ...todos.slice(index + 1),
         ];
 
