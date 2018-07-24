@@ -49,22 +49,17 @@ export default {
 
     updateTitle(id, title) {
         const index = todos.findIndex((todo) => todo.id === id);
-
-        if (index === -1) {
-            return;
-        }
-
         const todo = todos[index];
 
-        if (todo.title === title) {
+        if (!todo || todo.title === title) {
             return;
         }
 
-        const newTodo = { ...todo, title };
+        const updatedTodo = { ...todo, title };
 
         todos = [
             ...todos.slice(0, index),
-            newTodo,
+            updatedTodo,
             ...todos.slice(index + 1),
         ];
 
@@ -73,22 +68,17 @@ export default {
 
     updateCompleted(id, completed) {
         const index = todos.findIndex((todo) => todo.id === id);
-
-        if (index === -1) {
-            return;
-        }
-
         const todo = todos[index];
 
-        if (todo.completed === completed) {
+        if (!todo || todo.completed === completed) {
             return;
         }
 
-        const newTodo = { ...todo, completed };
+        const updatedTodo = { ...todo, completed };
 
         todos = [
             ...todos.slice(0, index),
-            newTodo,
+            updatedTodo,
             ...todos.slice(index + 1),
         ];
 
