@@ -139,27 +139,30 @@ export default {
 };
 ```
 
-Note that `collaboration.shared` is a reference to the CRDT instance.
+The `collaboration.shared` is a reference to the CRDT instance. We will use it in next steps to perform changes on the underlying state.
+
+Note that we are calling `removeAllListeners('state changed')` so that `load` can be called multiple times during the lifecyle of the app. If we didn't do that, the subscribers would be called multiple times for the same event.
+
 
 #### 4.4. Get rid of the `localStorage`
 
 Peer-star already persists the last known state of each collaboration. This means that we can safely remove any code that relates to storing or reading the To-dos from the `localStorage`.
 
-You may remove all the lines that start with a `-`:
+You may remove all the lines below:
 
 ```js
 // src/todos-store.js
 // ....
 
-- import throttle from 'lodash/throttle';
+import throttle from 'lodash/throttle';
 
 // ....
 
-- window.addEventListener('unload', () => saveTodos(todos));
+window.addEventListener('unload', () => saveTodos(todos));
 
-- const readTodos = () => JSON.parse(localStorage.getItem('dapp-todos') || '[]');
-- const saveTodos = () => todos && localStorage.setItem('dapp-todos', JSON.stringify(todos));
-- const saveTodosThrottled = throttle(saveTodos, 1000, { leading: false });
+const readTodos = () => JSON.parse(localStorage.getItem('dapp-todos') || '[]');
+const saveTodos = () => todos && localStorage.setItem('dapp-todos', JSON.stringify(todos));
+const saveTodosThrottled = throttle(saveTodos, 1000, { leading: false });
 ```
 
 ... and the `publishStateChange` now becomes simpler:
@@ -326,6 +329,7 @@ class App extends Component {
 
     async componentDidMount() {
         // ...
+
         todosStore.subscribePeers((peers) => this.setState({ peersCount: peers.size }));
     }
 
