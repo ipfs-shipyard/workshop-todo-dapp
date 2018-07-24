@@ -4,6 +4,7 @@ import debounce from 'lodash/debounce';
 
 let todos;
 const subscribers = new Set();
+const peersSubscribers = new Set();
 const app = createApp('todo-dapp');
 let collaboration;
 
@@ -11,6 +12,8 @@ app.on('error', (err) => console.error('error in app:', err));
 
 const publishStateChange = (todos) => subscribers.forEach((listener) => listener(todos));
 const publishStateChangeDebounced = debounce((todos) => subscribers.forEach((listener) => listener(todos)), 200);
+const publishPeersChange = (peers) => peersSubscribers.forEach((listener) => listener(peers));
+const publishPeersChangeDebounced = debounce(publishPeersChange, 200);
 
 export default {
     async load() {
@@ -19,15 +22,20 @@ export default {
         collaboration = await app.collaborate('todos', 'rga');
         todos = collaboration.shared.value();
 
+        collaboration.removeAllListeners('state changed');
         collaboration.on('state changed', (fromSelf) => {
             todos = collaboration.shared.value();
 
             if (fromSelf) {
                 publishStateChange(todos);
+                publishStateChangeDebounced.cancel();
             } else {
                 publishStateChangeDebounced(todos);
             }
         });
+
+        collaboration.removeAllListeners('membership changed');
+        collaboration.on('membership changed', publishPeersChangeDebounced);
 
         return todos;
     },
@@ -89,5 +97,11 @@ export default {
         subscribers.add(subscriber);
 
         return () => subscribers.remove(subscriber);
+    },
+
+    subscribePeers(subscriber) {
+        peersSubscribers.add(subscriber);
+
+        return () => peersSubscribers.remove(subscriber);
     },
 };

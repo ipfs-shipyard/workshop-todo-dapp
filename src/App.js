@@ -13,6 +13,7 @@ class App extends Component {
         error: null,
         todos: null,
         filter: 'all',
+        peersCount: 1,
     };
 
     async componentDidMount() {
@@ -26,10 +27,11 @@ class App extends Component {
         }
 
         todosStore.subscribe((todos) => this.setState({ todos }));
+        todosStore.subscribePeers((peers) => this.setState({ peersCount: peers.size }));
     }
 
     render() {
-        const { loading, error, todos } = this.state;
+        const { loading, error, todos, peersCount } = this.state;
 
         return (
             <div className="App">
@@ -42,6 +44,8 @@ class App extends Component {
                 { todos ? this.renderTodos() : null }
 
                 <footer className="App__footer">
+                    <div className="App_peers-count">{ peersCount }</div>
+
                     <p>Double-click to edit a todo</p>
                     <p>Based on the work of <a href="http://github.com/petehunt/">petehunt</a></p>
                     <p>Slightly modified version of <a href="http://todomvc.com">TodoMVC</a></p>
