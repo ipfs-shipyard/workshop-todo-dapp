@@ -345,13 +345,15 @@ class App extends Component {
 
 ### 7.2. Render `peersCount` in the UI
 
-Let's render `peersCount` above the footer:
+Let's render `peersCount` in the footer:
 
 ```jsx
 // src/App.js
 // ...
 
 class App extends Component {
+    // ...
+
     render() {
         const { loading, error, todos, peersCount } = this.state;
 
@@ -360,7 +362,7 @@ class App extends Component {
                 { /* ... */ }
 
                 <footer className="App__footer">
-                    <div className="App_peers-count">{ peersCount }</div>
+                    <div className="App__peers-count">{ peersCount }</div>
 
                     { /* ... */ }
                 </footer>
@@ -372,7 +374,7 @@ class App extends Component {
 
 ### 7.3. Style `peersCount` in the UI
 
-Finally, add the `App_peers-count` CSS class to the bottom of `App.css`:
+Finally, add the `App__peers-count` CSS class to the bottom of `App.css`:
 
 ```css
 /* App.css */
