@@ -24,8 +24,8 @@ At any time, you may check the final application in the [`with-peer-star`](https
 1. [Displaying the number of users](#7-displaying-the-number-of-users-peers)
     1. [Replicate the `subscribe` and `publishStateChange` but for the peers](#71-replicate-the-subscribe-and-publishstatechange-but-for-the-peers)
     1. [Keep track of `peersCount` in the UI](#72-keep-track-of-peerscount-in-the-ui)
-    1. [Render `peersCount` in the UI](#73-style-peerscount-in-the-ui)
-    1. [Style `peersCount` in the UI](#73-style-peerscount-in-the-ui)
+    1. [Render `peersCount` in the UI](#73-render-peerscount-in-the-ui)
+    1. [Style `peersCount` in the UI](#74-style-peerscount-in-the-ui)
 1. [Deploying the application on IPFS](#8-deploying-the-application-on-ipfs)
 
 ### 1. Installing
@@ -337,7 +337,7 @@ class App extends Component {
 }
 ```
 
-### 7.2. Render `peersCount` in the UI
+### 7.3. Render `peersCount` in the UI
 
 Let's render `peersCount` in the footer:
 
@@ -366,7 +366,7 @@ class App extends Component {
 );
 ```
 
-### 7.3. Style `peersCount` in the UI
+### 7.4. Style `peersCount` in the UI
 
 Finally, add the `App__peers-count` CSS class to the bottom of `App.css`:
 
