@@ -50,7 +50,7 @@ The application will open automatically in your browser once ready.
 
 The [`App`](src/App.js) component is our root react component. When mounted, it loads the initial To-dos from the `todos-store` and subscribes to subsequent updates. This ensures that any change to the To-dos state will trigger a UI update. While you can explore the `App` component and all its underlying logic, our goal is to change it as little as possible.
 
-The [`todos-store`](src/todos-store.js) exposes all the operations necessary to read and manipulate the todos. It also continuously persists the state to the `localStorage` so that the To-dos can be restored on subsequent visits. Moreover, it allows subscribers to receive the new state whenever it's updated. The state looks like this:
+The [`todos-store`](src/todos-store.js) exposes all the operations necessary to read and manipulate the To-dos. It also continuously persists the state to the `localStorage` so that the To-dos can be restored on subsequent visits. Moreover, it allows subscribers to receive the new state whenever it's updated. The state looks like this:
 
 ```js
 [
@@ -272,7 +272,7 @@ collaboration.on('state changed', (fromSelf) => {
 import debounce from 'lodash/debounce';
 
 // ...
-const publishStateChangeDebounced = debounce(peersStateChange, 200);
+const publishStateChangeDebounced = debounce(publishStateChange, 200);
 ```
 
 Note that debouncing might cause the UI to not be in sync with the state. That's not an issue in this case because we are using IDs to perform the operations within the store.
