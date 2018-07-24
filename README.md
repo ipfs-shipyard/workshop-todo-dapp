@@ -127,7 +127,7 @@ export default {
         collaboration.removeAllListeners('state changed');
         collaboration.on('state changed', () => {
             todos = collaboration.shared.value();
-            publishStateChange();
+            publishStateChange(todos);
         });
 
         todos = collaboration.shared.value();
@@ -170,7 +170,7 @@ const saveTodosThrottled = throttle(saveTodos, 1000, { leading: false });
 ```js
 // src/todos-store.js
 
-const publishStateChange = () => subscribers.forEach((listener) => listener(todos));
+const publishStateChange = (todos) => subscribers.forEach((listener) => listener(todos));
 ```
 
 Yeah, less code yields profit!
@@ -259,10 +259,10 @@ collaboration.on('state changed', (fromSelf) => {
     todos = collaboration.shared.value();
 
     if (fromSelf) {
-        publishStateChange();
+        publishStateChange(todos);
         publishStateChangeDebounced.cancel();  // Cancel any pending debounced
     } else {
-        publishStateChangeDebounced();
+        publishStateChangeDebounced(todos);
     }
 });
 ```
@@ -374,7 +374,7 @@ Finally, add the `App__peers-count` CSS class to the bottom of `App.css`:
 /* App.css */
 /* ... */
 
-.App_peers-count {
+.App__peers-count {
     width: 50px;
     height: 50px;
     margin-bottom: 25px;

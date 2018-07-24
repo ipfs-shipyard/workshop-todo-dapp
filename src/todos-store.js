@@ -10,7 +10,7 @@ const readTodos = () => JSON.parse(localStorage.getItem('dapp-todos') || '[]');
 const saveTodos = () => todos && localStorage.setItem('dapp-todos', JSON.stringify(todos));
 const saveTodosThrottled = throttle(saveTodos, 1000, { leading: false });
 
-const publishStateChange = () => {
+const publishStateChange = (todos) => {
     saveTodosThrottled(todos);
     subscribers.forEach((listener) => listener(todos));
 };
@@ -24,12 +24,14 @@ export default {
     },
 
     add(title) {
+        const newTodo = { id: uuidv4(), title, completed: false };
+
         todos = [
             ...todos,
-            { id: uuidv4(), title, completed: false },
+            newTodo,
         ];
 
-        publishStateChange();
+        publishStateChange(todos);
     },
 
     remove(id) {
@@ -44,7 +46,7 @@ export default {
             ...todos.slice(index + 1),
         ];
 
-        publishStateChange();
+        publishStateChange(todos);
     },
 
     updateTitle(id, title) {
@@ -63,7 +65,7 @@ export default {
             ...todos.slice(index + 1),
         ];
 
-        publishStateChange();
+        publishStateChange(todos);
     },
 
     updateCompleted(id, completed) {
@@ -82,7 +84,7 @@ export default {
             ...todos.slice(index + 1),
         ];
 
-        publishStateChange();
+        publishStateChange(todos);
     },
 
     updateAllCompleted(completed) {
