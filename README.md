@@ -1,4 +1,4 @@
-# workshop-todo-app
+# workshop-todo-dapp
 
 This walk-through will guide you into the process of converting a local To-do application into a decentralized application that allows different users to manipulate the To-dos collaboratively and in realtime, while also offering offline support.
 
