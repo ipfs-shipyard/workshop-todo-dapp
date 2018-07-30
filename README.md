@@ -20,13 +20,17 @@ At any time, you may check the final application in the [`with-peer-star`](https
     1. [Get rid of the `localStorage`](#44-get-rid-of-the-localstorage)
     1. [Update `add`, `remove`, `updateTitle` and `updateCompleted`](#45-update-add-remove-updatetitle-and-updatecompleted)
 1. [Testing if the application works locally](#5-testing-if-the-application-works-locally)
-1. [Testing if the application works with other users](#6-testing-if-the-application-works-with-other-users)
-1. [Displaying the number of users](#7-displaying-the-number-of-users-peers)
-    1. [Replicate the `subscribe` and `publishStateChange` but for the peers](#71-replicate-the-subscribe-and-publishstatechange-but-for-the-peers)
-    1. [Keep track of `peersCount` in the UI](#72-keep-track-of-peerscount-in-the-ui)
-    1. [Render `peersCount` in the UI](#73-render-peerscount-in-the-ui)
-    1. [Style `peersCount` in the UI](#74-style-peerscount-in-the-ui)
+1. [Displaying the number of users](#6-displaying-the-number-of-users-peers)
+    1. [Replicate the `subscribe` and `publishStateChange` but for the peers](#61-replicate-the-subscribe-and-publishstatechange-but-for-the-peers)
+    1. [Keep track of `peersCount` in the UI](#62-keep-track-of-peerscount-in-the-ui)
+    1. [Render `peersCount` in the UI](#63-render-peerscount-in-the-ui)
+    1. [Style `peersCount` in the UI](#64-style-peerscount-in-the-ui)
+1. [Testing if the application works with other users](#7-testing-if-the-application-works-with-other-users)
 1. [Deploying the application on IPFS](#8-deploying-the-application-on-ipfs)
+    1. [Install IPFS and run a local node](#81-install-ipfs-and-run-a-local-node)
+    1. [Ensure links are relative](#82-ensure-links-are-relative)
+    1. [Build and deploy](#83-build-and-deploy)
+    1. [Using a domain](#84-using-a-domain)
 
 ### 1. Installing
 
@@ -247,7 +251,120 @@ And that's all. Easy huh?
 
 You may test the changes we made locally. The application should behave exactly the same as before but it's now partially decentralized! It's not totally decentralized because we are still serving it using a web server. But more on that later.
 
-### 6. Testing if the application works with other users
+### 6. Displaying the number of users (peers)
+
+The `collaboration` emits the `membership changed` event that we can listen to keep track of the peers collaborating. We will use it to display the number of peers in the UI.
+
+### 6.1. Replicate the `subscribe` and `publishStateChange` but for the peers
+
+Lets replicate the `subscribe` and `publishStateChange` logic but for the peers:
+
+```js
+// src/todos-store.js
+// ...
+
+const publishPeersChange = (peers) => peersSubscribers.forEach((listener) => listener(peers));
+const publishPeersChangeDebounced = debounce(publishPeersChange, 200);
+
+export default {
+    async load() {
+        // ...
+
+        collaboration.removeAllListeners('membership changed');
+        collaboration.on('membership changed', publishPeersChangeDebounced);
+    },
+
+    // ...
+
+    subscribePeers(subscriber) {
+        peersSubscribers.add(subscriber);
+
+        return () => peersSubscribers.remove(subscriber);
+    },
+};
+```
+
+### 6.2. Keep track of `peersCount` in the UI
+
+Add `peersCount` to the `App` component state and update it whenever it changes:
+
+```js
+// src/App.js
+// ...
+
+class App extends Component {
+    state = {
+        // ...
+        peersCount: 1,
+    }
+
+    async componentDidMount() {
+        // ...
+
+        todosStore.subscribePeers((peers) => this.setState({ peersCount: peers.size }));
+    }
+
+    // ...
+}
+```
+
+### 6.3. Render `peersCount` in the UI
+
+Let's render `peersCount` in the footer:
+
+```jsx
+// src/App.js
+// ...
+
+class App extends Component {
+    // ...
+
+    render() {
+        const { loading, error, todos, peersCount } = this.state;
+
+        return (
+            <div className="App">
+                { /* ... */ }
+
+                <footer className="App__footer">
+                    <div className="App__peers-count">{ peersCount }</div>
+
+                    { /* ... */ }
+                </footer>
+            </div>
+        );
+    }
+);
+```
+
+### 6.4. Style `peersCount` in the UI
+
+Finally, add the `App__peers-count` CSS class to the bottom of `App.css`:
+
+```css
+/* App.css */
+/* ... */
+
+.App__peers-count {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 25px;
+    padding: 5px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #cc9a9a;
+    background-color: rgba(175, 47, 47, 0.15);
+    border-radius: 50%;
+    color: #6f6f6f;
+    font-size: 15px;
+    line-height: 50px;
+}
+```
+
+You should now be able to see the number of peers collaborating on the To-dos. Depending on the network, it might take some time to discover peers.
+
+### 7. Testing if the application works with other users
 
 Open the application in two different browsers, e.g.: Chrome and Chrome incognito. Any changes should replicate seamlessly. Be sure to also make changes while offline and see if they syncronize correctly once online.
 
@@ -283,122 +400,70 @@ const publishStateChangeDebounced = debounce(publishStateChange, 200);
 
 Note that debouncing might cause the UI to not be in sync with the state. That's not an issue in this case because we are using IDs to perform the operations within the store.
 
-### 7. Displaying the number of users (peers)
-
-The `collaboration` emits the `membership changed` event that we can listen to keep track of the peers collaborating. We will use it to display the number of peers in the UI.
-
-### 7.1. Replicate the `subscribe` and `publishStateChange` but for the peers
-
-Lets replicate the `subscribe` and `publishStateChange` logic but for the peers:
-
-```js
-// src/todos-store.js
-// ...
-
-const publishPeersChange = (peers) => peersSubscribers.forEach((listener) => listener(peers));
-const publishPeersChangeDebounced = debounce(publishPeersChange, 200);
-
-export default {
-    async load() {
-        // ...
-
-        collaboration.removeAllListeners('membership changed');
-        collaboration.on('membership changed', publishPeersChangeDebounced);
-    },
-
-    // ...
-
-    subscribePeers(subscriber) {
-        peersSubscribers.add(subscriber);
-
-        return () => peersSubscribers.remove(subscriber);
-    },
-};
-```
-
-### 7.2. Keep track of `peersCount` in the UI
-
-Add `peersCount` to the `App` component state and update it whenever it changes:
-
-```js
-// src/App.js
-// ...
-
-class App extends Component {
-    state = {
-        // ...
-        peersCount: 1,
-    }
-
-    async componentDidMount() {
-        // ...
-
-        todosStore.subscribePeers((peers) => this.setState({ peersCount: peers.size }));
-    }
-
-    // ...
-}
-```
-
-### 7.3. Render `peersCount` in the UI
-
-Let's render `peersCount` in the footer:
-
-```jsx
-// src/App.js
-// ...
-
-class App extends Component {
-    // ...
-
-    render() {
-        const { loading, error, todos, peersCount } = this.state;
-
-        return (
-            <div className="App">
-                { /* ... */ }
-
-                <footer className="App__footer">
-                    <div className="App__peers-count">{ peersCount }</div>
-
-                    { /* ... */ }
-                </footer>
-            </div>
-        );
-    }
-);
-```
-
-### 7.4. Style `peersCount` in the UI
-
-Finally, add the `App__peers-count` CSS class to the bottom of `App.css`:
-
-```css
-/* App.css */
-/* ... */
-
-.App__peers-count {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 25px;
-    padding: 5px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #cc9a9a;
-    background-color: rgba(175, 47, 47, 0.15);
-    border-radius: 50%;
-    color: #6f6f6f;
-    font-size: 15px;
-    line-height: 50px;
-}
-```
-
-You should now be able to see the number of peers collaborating on the To-dos. Depending on the network, it might take some time to discover peers.
-
 ### 8. Deploying the application on IPFS
 
-TODO:
+Instead of using a regular web server to serve the application, we will use IPFS instead. After completing this step, our app will be 100% decentralized!
+
+#### 8.1. Install IPFS and run a local node
+
+We need to have a local IPFS node for the upcoming steps. We will use a [JS IPFS node](https://github.com/ipfs/js-ipfs) but you could use a [Go node](https://github.com/ipfs/go-ipfs) instead.
+
+Let's install it globally:
+
+```sh
+$ npm install -g ipfs
+```
+
+Now, open a new terminal window and start the node:
+
+```sh
+$ jsipfs init
+$ jsipfs daemon
+```
+
+#### 8.2. Ensure links are relative
+
+Everything stored on IPFS is immutable and content-addressable. When a file is stored, IPFS calculates its hash and uses it as an identifier, called `cid`. These files can be accessed in your browser via IPFS node gateways. Because we are running the JS IPFS node, we can access files via `http://localhost:9090/ipfs/<cid>`.
+
+Because the `cid` is unknown at build time, we can't use absolute paths to reference any links or assets. Luckily for us, Create React App allows us to set a `homepage` property which will be used to prefix every asset:
+
+```json
+{
+    "name": "workshop-todo-dapp",
+    "homepage": ".",
+    "...other": "properties"
+}
+```
+
+#### 8.3. Build and deploy
+
+Let's create a production-ready version of the website by building it:
+
+```sh
+$ npm run build
+```
+
+This creates a `build` folder with all the application assets. Let's deploy it to IPFS by adding that folder to your local IPFS node:
+
+```sh
+$ jsipfs add -r build
+```
+
+The `-r` tell `ipfs` to recursively add all the files. At the end of the command output, you should see the `cid` of all added files, including the build folder one:
+
+```
+...
+added QmcFc6EPhavNSfdjG8byaxxV6KtHZvnDwYXLHvyJQPp3uN public/favicon.ico
+added <cid> build
+```
+
+Finally, copy the `<cid>` and use your local IPFS node to access the website: `http://localhost:9090/ipfs/<cid>`. The trick here is that other IPFS nodes that pin the same `<cid>` will also be eligible to serve the website!
+
+#### 8.4. Using a domain
+
+In order to use a domain with your website deployed on IPFS, we need to first understand dnslink. Please watch ["Quick explanation of dnslink in IPFS"](https://www.youtube.com/watch?v=YxKZFeDvcBs) by [@VictorBjelkholm](https://github.com/VictorBjelkholm) that explains what dnslink is in less than 3 minutes.
+
+First, create to a ALIAS record pointing to a public Gateway (e.g.: gateway-int.ipfs.io) or a A record pointing to the IP address where your IPFS gateway is running. Lastly, create a TXT record named `_dnslink.<domain>` with a value of `dnslink=/ipfs/<cid>` (eplace `<domain>` and `<cid>` with the correct values). We recommend setting a short TTL like 60 seconds.
 
 ## Interested in knowing more?
 
