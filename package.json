@@ -14,15 +14,16 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
     "eslint-config-moxy": "^5.5.3",
+    "react-app-rewired": "^1.5.2",
     "stylelint": "^9.3.0",
-    "stylelint-config-moxy": "^5.0.0"
+    "stylelint-config-moxy": "^5.0.0",
+    "uglifyjs-webpack-plugin": "^1.2.7"
   }
 }
