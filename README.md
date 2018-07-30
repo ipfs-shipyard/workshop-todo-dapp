@@ -68,7 +68,7 @@ As you imagine, this application only works locally within the browser. It doesn
 
 But even so, how do we deal with concurrent updates? What if we want to allow users to performs changes while offline and sync them when online? These are [hard problems](https://www.youtube.com/watch?v=4VB66hJSvqM) to solve unless we use the right technologies.
 
-This is where `peer-start-app` comes in. It's goal is to provide the primitives for developers to build real-time and offline-first decentralized applications by using ([delta](https://github.com/ipfs-shipyard/js-delta-crdts)) [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) and [IPFS](https://ipfs.io/).
+This is where `peer-star-app` comes in. It's goal is to provide the primitives for developers to build real-time and offline-first decentralized applications by using ([delta](https://github.com/ipfs-shipyard/js-delta-crdts)) [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) and [IPFS](https://ipfs.io/).
 
 ### 4. Adapting the To-dos store to use `peer-star-app`
 
@@ -221,7 +221,7 @@ export default {
         collaboration.shared.updateAt(index, updatedTodo);
     },
 
-    updateTitle(id, completed) {
+    updateCompleted(id, completed) {
         const index = todos.findIndex((todo) => todo.id === id);
         const todo = todos[index];
 
@@ -405,4 +405,4 @@ If you are insterested in helping us or even just tracking progress, you may do 
 
 - IPFS's Dynamic Data and Capabilities Working Group on GitHub - https://github.com/ipfs/dynamic-data-and-capabilities
 - `#ipfs` and `#ipfs-dynamic-data` IRC channels on freenode.net
-- `peer-start-app` repository on GitHub - https://github.com/ipfs-shipyard/peer-star-app
+- `peer-star-app` repository on GitHub - https://github.com/ipfs-shipyard/peer-star-app
