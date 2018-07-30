@@ -122,7 +122,7 @@ export default {
     async load() {
         await app.start();
 
-        collaboration = await app.collaborate('todos', 'rga');
+        collaboration = await app.collaborate('todos-of-<github-username>', 'rga');
 
         collaboration.removeAllListeners('state changed');
         collaboration.on('state changed', () => {
@@ -138,6 +138,9 @@ export default {
     // ...
 };
 ```
+
+Be sure to change `<<github-username>` so that the Collaboration ID is unique. This ensures that you start with an empty list of To-dos.
+
 
 The `collaboration.shared` is a reference to the CRDT instance. We will use it in next steps to perform changes on the underlying state.
 
