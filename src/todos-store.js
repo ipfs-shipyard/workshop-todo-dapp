@@ -1,6 +1,5 @@
 import uuidv4 from 'uuid/v4';
 import createApp from 'peer-star-app';
-import debounce from 'lodash/debounce';
 
 let todos;
 const subscribers = new Set();
@@ -11,9 +10,7 @@ let collaboration;
 app.on('error', (err) => console.error('error in app:', err));
 
 const publishStateChange = (todos) => subscribers.forEach((listener) => listener(todos));
-const publishStateChangeDebounced = debounce((todos) => subscribers.forEach((listener) => listener(todos)), 200);
 const publishPeersChange = (peers) => peersSubscribers.forEach((listener) => listener(peers));
-const publishPeersChangeDebounced = debounce(publishPeersChange, 200);
 
 export default {
     async load() {
@@ -23,19 +20,13 @@ export default {
         todos = collaboration.shared.value();
 
         collaboration.removeAllListeners('state changed');
-        collaboration.on('state changed', (fromSelf) => {
+        collaboration.on('state changed', () => {
             todos = collaboration.shared.value();
-
-            if (fromSelf) {
-                publishStateChange(todos);
-                publishStateChangeDebounced.cancel();
-            } else {
-                publishStateChangeDebounced(todos);
-            }
+            publishStateChange(todos);
         });
 
         collaboration.removeAllListeners('membership changed');
-        collaboration.on('membership changed', publishPeersChangeDebounced);
+        collaboration.on('membership changed', publishPeersChange);
 
         return todos;
     },
