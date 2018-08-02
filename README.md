@@ -264,14 +264,13 @@ Lets replicate the `subscribe` and `publishStateChange` logic but for the peers:
 // ...
 
 const publishPeersChange = (peers) => peersSubscribers.forEach((listener) => listener(peers));
-const publishPeersChangeDebounced = debounce(publishPeersChange, 200);
 
 export default {
     async load() {
         // ...
 
         collaboration.removeAllListeners('membership changed');
-        collaboration.on('membership changed', publishPeersChangeDebounced);
+        collaboration.on('membership changed', publishPeersChange);
     },
 
     // ...
@@ -367,38 +366,6 @@ You should now be able to see the number of peers collaborating on the To-dos. D
 ### 7. Testing if the application works with other users
 
 Open the application in two different browsers, e.g.: Chrome and Chrome incognito. Any changes should replicate seamlessly. Be sure to also make changes while offline and see if they syncronize correctly once online.
-
-There's one issue though: whenever a new fresh peer joins the collaboration, it receives a burst of `stage changed` events. To not overwhelm the UI with updates, we want to debounce or throttle that event. However, our own changes to the CRDT need to applied right away so that the application feels responsive.
-
-To do so, change the `state changed` handler within the `load` function to:
-
-```js
-// src/todos-store.js
-
-collaboration.on('state changed', (fromSelf) => {
-    todos = collaboration.shared.value();
-
-    if (fromSelf) {
-        publishStateChange(todos);
-        publishStateChangeDebounced.cancel();  // Cancel any pending debounced
-    } else {
-        publishStateChangeDebounced(todos);
-    }
-});
-```
-
-..and implement the `publishStateChangeDebounced` just after the regular `publishStateChange` like so:
-
-```js
-// src/todos-store.js
-// ...
-import debounce from 'lodash/debounce';
-
-// ...
-const publishStateChangeDebounced = debounce(publishStateChange, 200);
-```
-
-Note that debouncing might cause the UI to not be in sync with the state. That's not an issue in this case because we are using IDs to perform the operations within the store.
 
 ### 8. Deploying the application on IPFS
 
