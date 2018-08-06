@@ -430,7 +430,13 @@ Finally, copy the `<cid>` and use your local IPFS node to access the website: `h
 
 In order to use a domain with your website deployed on IPFS, we need to first understand dnslink. Please watch ["Quick explanation of dnslink in IPFS"](https://www.youtube.com/watch?v=YxKZFeDvcBs) by [@VictorBjelkholm](https://github.com/VictorBjelkholm) that explains what dnslink is in less than 3 minutes.
 
-First, create to a ALIAS record pointing to a public Gateway (e.g.: gateway-int.ipfs.io) or a A record pointing to the IP address where your IPFS gateway is running. Lastly, create a TXT record named `_dnslink.<domain>` with a value of `dnslink=/ipfs/<cid>` (eplace `<domain>` and `<cid>` with the correct values). We recommend setting a short TTL like 60 seconds.
+First, create to a ALIAS record pointing to a public Gateway (e.g.: gateway-int.ipfs.io) or a A record pointing to the IP address where your IPFS gateway is running. Lastly, create a TXT record named `_dnslink.<domain>` with a value of `dnslink=/ipfs/<cid>` (replace `<domain>` and `<cid>` with the correct values). We recommend setting a short TTL like 60 seconds.
+
+Note that the `<cid>` should be pined by one or more IPFS nodes so that there's at least one node available to serve it. To do so, you may run:
+
+```sh
+$ jsipfs pin add <cid>
+```
 
 ## Interested in knowing more?
 
