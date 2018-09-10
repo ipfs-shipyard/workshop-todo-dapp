@@ -8,7 +8,7 @@ The project was bootstrapped with [Create React App](https://github.com/facebook
 
 Follow the step-by-step walk-through below to complete the workshop.
 
-At any time, you may check the final application in the [`with-peer-star`](https://github.com/ipfs-shipyard/workshop-todo-app/tree/with-peer-star) branch in case you are running into issues.
+At any time, you may check the final application in the [`with-peer-star`](https://github.com/ipfs-shipyard/workshop-todo-dapp/compare/master...with-peer-star) branch in case you are running into issues.
 
 1. [Installing](#1-installing)
 1. [Running](#2-running)
