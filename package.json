@@ -4,26 +4,29 @@
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
-    "lodash": "^4.17.10",
-    "memoize-one": "^4.0.0",
+    "lodash": "^4.17.11",
+    "memoize-one": "^4.0.2",
     "normalize.css": "^8.0.0",
     "pluralize": "^7.0.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-scripts": "2.0.5",
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test --env=jsdom"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom"
   },
   "devDependencies": {
-    "eslint": "^4.19.1",
-    "eslint-config-moxy": "^5.5.3",
-    "react-app-rewired": "^1.5.2",
-    "stylelint": "^9.3.0",
-    "stylelint-config-moxy": "^5.0.0",
-    "uglifyjs-webpack-plugin": "^1.2.7"
-  }
+    "eslint-config-moxy": "^6.1.1",
+    "stylelint": "^9.6.0",
+    "stylelint-config-moxy": "^5.0.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
