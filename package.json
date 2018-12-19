@@ -5,12 +5,12 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
-    "memoize-one": "^4.0.2",
-    "normalize.css": "^8.0.0",
+    "memoize-one": "^5.0.0",
+    "normalize.css": "^8.0.1",
     "pluralize": "^7.0.0",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-scripts": "^2.0.5",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "react-scripts": "^2.1.1",
     "uuid": "^3.3.2"
   },
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "eslint-config-moxy": "^6.1.1",
-    "stylelint": "^9.6.0",
+    "stylelint": "^9.9.0",
     "stylelint-config-moxy": "^5.0.0"
   },
   "browserslist": [
