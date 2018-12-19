@@ -8,13 +8,13 @@ The project was bootstrapped with [Create React App](https://github.com/facebook
 
 Follow the step-by-step walk-through below to complete the workshop.
 
-At any time, you may check the final application in the [`with-peer-star`](https://github.com/ipfs-shipyard/workshop-todo-dapp/compare/master...with-peer-star) branch in case you are running into issues.
+At any time, you may check the final application in the [`with-peer-base`](https://github.com/ipfs-shipyard/workshop-todo-dapp/compare/master...with-peer-base) branch in case you are running into issues.
 
 1. [Installing](#1-installing)
 1. [Running](#2-running)
 1. [Understanding the To-dos store and data-model](#3-understanding-the-to-dos-store-and-data-model)
-1. [Adapting the To-dos store to use `peer-star-app`](#4-adapting-the-to-dos-store-to-use-peer-star-app)
-    1. [Install `peer-star-app`](#41-install-peer-star-app)
+1. [Adapting the To-dos store to use `peer-base`](#4-adapting-the-to-dos-store-to-use-peer-base)
+    1. [Install `peer-base`](#41-install-peer-base)
     1. [Create the app](#42-create-the-app)
     1. [Re-implement the `load` method](#43-re-implement-the-load-method)
     1. [Get rid of the `localStorage`](#44-get-rid-of-the-localstorage)
@@ -72,16 +72,16 @@ As you imagine, this application only works locally within the browser. It doesn
 
 But even so, how do we deal with concurrent updates? What if we want to allow users to performs changes while offline and sync them when online? These are [hard problems](https://www.youtube.com/watch?v=4VB66hJSvqM) to solve unless we use the right technologies.
 
-This is where `peer-star-app` comes in. It's goal is to provide the primitives for developers to build real-time and offline-first decentralized applications by using ([delta](https://github.com/ipfs-shipyard/js-delta-crdts)) [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) and [IPFS](https://ipfs.io/).
+This is where `peer-base` comes in. It's goal is to provide the primitives for developers to build real-time and offline-first decentralized applications by using ([delta](https://github.com/ipfs-shipyard/js-delta-crdts)) [CRDTs](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) and [IPFS](https://ipfs.io/).
 
-### 4. Adapting the To-dos store to use `peer-star-app`
+### 4. Adapting the To-dos store to use `peer-base`
 
-#### 4.1. Install `peer-star-app`
+#### 4.1. Install `peer-base`
 
-Install `peer-star-app` by running:
+Install `peer-base` by running:
 
 ```sh
-$ npm install peer-star-app
+$ npm install peer-base
 ```
 
 #### 4.2. Create the app
@@ -90,7 +90,7 @@ Create a new app with the name `todo-dapp`:
 
 ```js
 // src/todos-store.js
-import createApp from 'peer-star-app';
+import createApp from 'peer-base';
 
 // ...
 
@@ -110,7 +110,7 @@ We need to re-implement the `load` function which is responsible for loading the
 - Subscribe to the `state changed` event of the collaboration to receive updates to the underlying To-dos
 - Update `todos` variable to the last known list of To-dos
 
-In `peer-star-app` we may have as many collaborations as we want. Users collaborate on a CRDT [type](https://github.com/ipfs-shipyard/js-delta-crdts#types): either a built-in or a custom one. Because the To-dos data-model is an array of objects, we will use the `rga` (Replicable Growable Array) type.
+In `peer-base` we may have as many collaborations as we want. Users collaborate on a CRDT [type](https://github.com/ipfs-shipyard/js-delta-crdts#types): either a built-in or a custom one. Because the To-dos data-model is an array of objects, we will use the `rga` (Replicable Growable Array) type.
 
 This allows multiple users to perform concurrent CRUD operations without any conflicts. This works well in most cases but it doesn't allow concurrent updates of the title and complete fields of To-dos. That could be supported by using sub-collaborations  but we will skip it for the sake of simplicity.
 
@@ -440,10 +440,10 @@ $ jsipfs pin add <cid>
 
 ## Interested in knowing more?
 
-The `peer-star-app` library is still in its infancy. We are actively working on adding features such as Identity, Authentication and Authorization.
+The `peer-base` library is still in its infancy. We are actively working on adding features such as Identity, Authentication and Authorization.
 
 If you are insterested in helping us or even just tracking progress, you may do so via:
 
 - IPFS's Dynamic Data and Capabilities Working Group on GitHub - https://github.com/ipfs/dynamic-data-and-capabilities
 - `#ipfs` and `#ipfs-dynamic-data` IRC channels on freenode.net
-- `peer-star-app` repository on GitHub - https://github.com/ipfs-shipyard/peer-star-app
+- `peer-base` repository on GitHub - https://github.com/peer-base/peer-base
