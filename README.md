@@ -262,6 +262,7 @@ Lets replicate the `subscribe` and `publishStateChange` logic but for the peers:
 ```js
 // src/todos-store.js
 // ...
+const peersSubscribers = new Set();
 
 const publishPeersChange = (peers) => peersSubscribers.forEach((listener) => listener(peers));
 
