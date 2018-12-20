@@ -1,12 +1,14 @@
 {
   "name": "workshop-todo-dapp",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
     "memoize-one": "^5.0.0",
     "normalize.css": "^8.0.1",
+    "peer-base": "^0.11.1",
     "pluralize": "^7.0.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
