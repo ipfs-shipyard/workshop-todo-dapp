@@ -443,7 +443,7 @@ $ jsipfs pin add <cid>
 
 The `peer-base` library is still in its infancy. We are actively working on adding features such as Identity, Authentication and Authorization.
 
-If you are insterested in helping us or even just tracking progress, you may do so via:
+If you are interested in helping us or even just tracking progress, you may do so via:
 
 - IPFS's Dynamic Data and Capabilities Working Group on GitHub - https://github.com/ipfs/dynamic-data-and-capabilities
 - `#ipfs` and `#ipfs-dynamic-data` IRC channels on freenode.net
